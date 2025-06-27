@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YouTube Title Generator</title>
+</head>
+<body>
+  <h1>Catchy YouTube Title Generator</h1>
+  <input id="topic" placeholder="Enter your video topic" />
+  <button onclick="generateTitle()">Generate</button>
+  <p id="result"></p>
+
+  <script>
+    const templates = [
+      "Top 10 Tips About {topic} You Need to Know!",
+      "Why Everyone Is Talking About {topic}",
+      "The Ultimate Guide to {topic}",
+      "Avoid These Mistakes When Doing {topic}",
+      "How to Master {topic} in 7 Days"
+    ];
+
+    function generateTitle() {
+      const topic = document.getElementById("topic").value;
+      if (!topic) return alert("Please enter a topic!");
+
+      const randomIndex = Math.floor(Math.random() * templates.length);
+      const result = templates[randomIndex].replace("{topic}", topic);
+      document.getElementById("result").innerText = result;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;700;800&display=swap" rel="stylesheet">
+    <title>Optimized Carousel Slider</title>
+    <style>
+        /* --- CSS Variables for Easy Theming --- */
+        :root {
+            --primary-color: #f1683a;
+            --text-color: #f0f0f0;
+            --bg-color: #1a1a1a;
+            --font-family: 'Inter', sans-serif;
+            --transition-duration: 0.5s;
+            /* Adjusted delay to start text animation as slide finishes */
+            --animation-delay-base: 0.5s; 
+        }
+
+        /* --- General Body and Font Styling --- */
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-family);
+            margin: 0;
+        }
+
+        a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        /* --- Header and Navigation --- */
+        header {
+            width: 1140px;
+            max-width: 90%;
+            margin: 0 auto;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 100;
+        }
+
+        header nav a {
+            margin-left: 30px;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+        
+        header nav a:hover {
+            color: var(--primary-color);
+        }
+
+        /* --- Carousel Container --- */
+        .carousel {
+            height: 100vh;
+            margin-top: -70px; /* Adjust to match header height */
+            width: 100vw;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- Main Slider List --- */
+        .carousel .list .item {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            inset: 0;
+            will-change: transform;
+        }
+
+        .carousel .list .item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8);
+        }
+
+        .carousel .list .item .content {
+            position: absolute;
+            top: 20%;
+            width: 1140px;
+            max-width: 80%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding-right: 30%;
+            box-sizing: border-box;
+            color: #fff;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            will-change: transform, opacity, filter;
+        }
+        
+        /* --- Content Styling --- */
+        .carousel .list .item .author {
+            font-weight: bold;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+        }
+
+        .carousel .list .item .title,
+        .carousel .list .item .topic {
+            font-size: 5em;
+            font-weight: 800;
+            line-height: 1.2em;
+        }
+
+        .carousel .list .item .topic {
+            color: var(--primary-color);
+        }
+
+        .carousel .list .item .des {
+            font-size: 1.1em;
+            line-height: 1.6em;
+        }
+
+        .carousel .list .item .buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 150px);
+            grid-template-rows: 45px;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .carousel .list .item .buttons button {
+            border: none;
+            background-color: var(--text-color);
+            letter-spacing: 3px;
+            font-family: var(--font-family);
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .carousel .list .item .buttons button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .carousel .list .item .buttons button:nth-child(2) {
+            background-color: transparent;
+            border: 1px solid #fff;
+            color: var(--text-color);
+        }
+        
+        .carousel .list .item .buttons button:nth-child(2):hover {
+            background-color: #fff;
+            color: #000;
+        }
+
+        /* --- Thumbnail Strip --- */
+        .thumbnail {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            width: max-content;
+            z-index: 100;
+            display: flex;
+            gap: 20px;
+            transition: transform var(--transition-duration);
+            padding-left: 0;
+        }
+
+        .thumbnail .item {
+            width: 150px;
+            height: 220px;
+            flex-shrink: 0;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            transition: width var(--transition-duration) ease-in-out;
+            list-style: none;
+        }
+
+        .thumbnail .item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail .item .content {
+            color: #fff;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+        }
+
+        /* --- Navigation Arrows --- */
+        .arrows {
+            position: absolute;
+            top: 80%;
+            right: 52%;
+            z-index: 100;
+            width: 300px;
+            max-width: 30%;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .arrows button {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: rgba(238, 228, 228, 0.25);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #fff;
+            font-family: monospace;
+            font-size: 1.5em;
+            font-weight: bold;
+            transition: var(--transition-duration);
+            cursor: pointer;
+        }
+
+        .arrows button:hover {
+            background-color: #fff;
+            color: #000;
+        }
+        
+        /* --- Animation Logic and Timing Bar --- */
+        .carousel .list .item:nth-child(1) {
+            z-index: 1;
+        }
+
+        /* Incoming content animation */
+        .carousel .list .item:nth-child(1) .content > div {
+            transform: translateY(50px);
+            filter: blur(20px);
+            opacity: 0;
+            animation: showContent var(--transition-duration) var(--animation-delay-base) linear 1 forwards;
+        }
+
+        @keyframes showContent {
+            to {
+                transform: translateY(0px);
+                filter: blur(0px);
+                opacity: 1;
+            }
+        }
+        
+        /* Staggered delay for incoming content */
+        .carousel .list .item:nth-child(1) .content .title { animation-delay: calc(var(--animation-delay-base) + 0.2s) !important; }
+        .carousel .list .item:nth-child(1) .content .topic { animation-delay: calc(var(--animation-delay-base) + 0.4s) !important; }
+        .carousel .list .item:nth-child(1) .content .des { animation-delay: calc(var(--animation-delay-base) + 0.6s) !important; }
+        .carousel .list .item:nth-child(1) .content .buttons { animation-delay: calc(var(--animation-delay-base) + 0.8s) !important; }
+
+        /* Outgoing content animation */
+        .carousel.next .list .item:nth-child(1) .content > div,
+        .carousel.prev .list .item:nth-child(1) .content > div {
+            animation: hideContent var(--transition-duration) linear 1 forwards !important;
+        }
+
+        @keyframes hideContent {
+            to {
+                transform: translateY(-50px);
+                filter: blur(20px);
+                opacity: 0;
+            }
+        }
+
+        /* Slide transition animations */
+        .carousel.next .list .item:nth-child(1) {
+            animation: outFrame var(--transition-duration) linear 1 forwards;
+        }
+        .carousel.prev .list .item:nth-child(1) {
+            animation: inFramePrev var(--transition-duration) linear 1 forwards;
+            z-index: 1;
+        }
+        @keyframes outFrame {
+            to { transform: translateX(-150px); }
+        }
+        
+        .carousel.next .list .item:nth-child(2) {
+            z-index: 2;
+            animation: inFrame var(--transition-duration) linear 1 forwards;
+        }
+        @keyframes inFrame {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .carousel.prev .list .item:nth-child(2) {
+            z-index: 2;
+            animation: outFrame .5s linear 1 forwards;
+        }
+        @keyframes inFramePrev {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Thumbnail animations */
+        .carousel.next .thumbnail { transform: translateX(170px); }
+        .carousel.prev .thumbnail { transform: translateX(-170px); }
+
+        /* Time running bar */
+        .carousel .time {
+            position: absolute;
+            z-index: 1000;
+            width: 0%;
+            height: 3px;
+            background-color: var(--primary-color);
+            left: 0;
+            top: 0;
+        }
+
+        .carousel.next .time,
+        .carousel.prev .time,
+        .carousel.auto .time {
+            animation: timeRunning 7s linear 1 forwards;
+        }
+        @keyframes timeRunning {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        /* --- Responsive Design --- */
+        @media screen and (max-width: 1024px) {
+            .carousel .list .item .content { padding-right: 0; }
+            .carousel .list .item .content .title { font-size: 4em; }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .carousel .list .item .content .title { font-size: 3em; }
+            .arrows { right: 10%; }
+            .thumbnail { justify-content: center; width: 100%; left: 0; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Contacts</a>
+            <a href="#">Info</a>
+        </nav>
+    </header>
+
+    <div class="carousel" role="region" aria-roledescription="carousel">
+        <div class="list" role="group" aria-roledescription="slide list">
+            <div class="item" role="group" aria-roledescription="slide">
+                <img src="https://placehold.co/1920x1080/2c3e50/ffffff?text=Tiger" alt="A majestic tiger.">
+                <div class="content">
+                    <div class="author">LUNDEV</div>
+                    <div class="title">DESIGN SLIDER</div>
+                    <div class="topic">TIGER</div>
+                    <div class="des">Tigers are the largest cat species, most recognizable for their dark vertical stripes on orange-brown fur with a lighter underside.</div>
+                    <div class="buttons">
+                        <button>SEE MORE</button>
+                        <button>SUBSCRIBE</button>
+                    </div>
+                </div>
+            </div>
+            <div class="item" role="group" aria-roledescription="slide">
+                <img src="https://placehold.co/1920x1080/34495e/ffffff?text=Lion" alt="A powerful lion.">
+                <div class="content">
+                    <div class="author">LUNDEV</div>
+                    <div class="title">DESIGN SLIDER</div>
+                    <div class="topic">LION</div>
+                    <div class="des">The lion is a species in the family Felidae and a member of the genus Panthera. It is most recognisable for its muscular, deep-chested body and a distinctive roar.</div>
+                    <div class="buttons">
+                        <button>SEE MORE</button>
+                        <button>SUBSCRIBE</button>
+                    </div>
+                </div>
+            </div>
+            <div class="item" role="group" aria-roledescription="slide">
+                <img src="https://placehold.co/1920x1080/e74c3c/ffffff?text=Wolf" alt="A watchful wolf.">
+                <div class="content">
+                    <div class="author">LUNDEV</div>
+                    <div class="title">DESIGN SLIDER</div>
+                    <div class="topic">WOLF</div>
+                    <div class="des">The wolf is a canine native to the wilderness and remote areas of Eurasia and North America. It is the largest extant member of its family.</div>
+                    <div class="buttons">
+                        <button>SEE MORE</button>
+                        <button>SUBSCRIBE</button>
+                    </div>
+                </div>
+            </div>
+            <div class="item" role="group" aria-roledescription="slide">
+                <img src="https://placehold.co/1920x1080/95a5a6/ffffff?text=Eagle" alt="A soaring eagle.">
+                <div class="content">
+                    <div class="author">LUNDEV</div>
+                    <div class="title">DESIGN SLIDER</div>
+                    <div class="topic">EAGLE</div>
+                    <div class="des">Eagle is the common name for many large birds of prey of the family Accipitridae. Eagles belong to several groups of genera, not all of which are closely related.</div>
+                    <div class="buttons">
+                        <button>SEE MORE</button>
+                        <button>SUBSCRIBE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <ul class="thumbnail">
+            <li class="item">
+                <img src="https://placehold.co/400x600/2c3e50/ffffff?text=Tiger" alt="Thumbnail of tiger slide.">
+                <div class="content"><div class="title">Tiger</div></div>
+            </li>
+            <li class="item">
+                <img src="https://placehold.co/400x600/34495e/ffffff?text=Lion" alt="Thumbnail of lion slide.">
+                <div class="content"><div class="title">Lion</div></div>
+            </li>
+            <li class="item">
+                <img src="https://placehold.co/400x600/e74c3c/ffffff?text=Wolf" alt="Thumbnail of wolf slide.">
+                <div class="content"><div class="title">Wolf</div></div>
+            </li>
+            <li class="item">
+                <img src="https://placehold.co/400x600/95a5a6/ffffff?text=Eagle" alt="Thumbnail of eagle slide.">
+                <div class="content"><div class="title">Eagle</div></div>
+            </li>
+        </ul>
+        
+        <div class="arrows">
+            <button id="prev" aria-label="Previous slide"><</button>
+            <button id="next" aria-label="Next slide">></button>
+        </div>
+        
+        <div class="time"></div>
+    </div>
+
+    <script>
+    // Self-invoking function to avoid polluting the global namespace
+    (function() {
+        // --- DOM SELECTION ---
+        const nextBtn = document.getElementById('next');
+        const prevBtn = document.getElementById('prev');
+        const carousel = document.querySelector('.carousel');
+        const slider = carousel.querySelector('.carousel .list');
+        const thumbnail = carousel.querySelector('.carousel .thumbnail');
+
+        // --- CONFIGURATION ---
+        const animationDuration = 500; // Corresponds to --transition-duration in CSS
+        const autoNextInterval = 7000; 
+        
+        let isAnimating = false; // Flag to prevent clicks during animation
+        let autoNextTimeout;
+
+        // Initialize by moving the first thumbnail to the end
+        thumbnail.appendChild(thumbnail.firstElementChild);
+
+        // --- EVENT LISTENERS ---
+        nextBtn.addEventListener('click', () => handleSlideChange('next'));
+        prevBtn.addEventListener('click', () => handleSlideChange('prev'));
+
+        /**
+         * Handles the logic for changing slides.
+         * @param {string} direction - 'next' or 'prev'
+         */
+        function handleSlideChange(direction) {
+            // Prevent function from running if an animation is already in progress
+            if (isAnimating) return;
+            isAnimating = true;
+
+            const sliderItems = slider.querySelectorAll('.item');
+            const thumbnailItems = thumbnail.querySelectorAll('.item');
+
+            if (direction === 'next') {
+                slider.appendChild(sliderItems[0]);
+                thumbnail.appendChild(thumbnailItems[0]);
+                carousel.classList.add('next');
+            } else {
+                slider.prepend(sliderItems[sliderItems.length - 1]);
+                thumbnail.prepend(thumbnailItems[thumbnailItems.length - 1]);
+                carousel.classList.add('prev');
+            }
+
+            // After the animation finishes, reset the state
+            setTimeout(() => {
+                carousel.classList.remove('next', 'prev');
+                isAnimating = false;
+            }, animationDuration);
+
+            // Reset and restart the auto-next timer
+            clearTimeout(autoNextTimeout);
+            autoNextTimeout = setTimeout(() => handleSlideChange('next'), autoNextInterval);
+        }
+
+        // --- INITIALIZATION ---
+        // Start the automatic slide transition on page load
+        autoNextTimeout = setTimeout(() => handleSlideChange('next'), autoNextInterval);
+
+    })();
+    </script>
+</body>
+</html>

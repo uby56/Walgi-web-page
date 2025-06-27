@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Looping Logo Carousel</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f8f9fa;
+    }
+
+    .support-orgs {
+      padding: 80px 0;
+      background: #f8f9fa;
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: 3rem;
+      margin-bottom: 3rem;
+      color: #333;
+    }
+
+    .logo-carousel-container {
+      overflow: hidden;
+      position: relative;
+      max-width: 100%;
+      margin: 0 auto;
+      mask: linear-gradient(90deg, transparent, white 10%, white 90%, transparent);
+      -webkit-mask: linear-gradient(90deg, transparent, white 10%, white 90%, transparent);
+    }
+
+    .logos-wrapper {
+      display: flex;
+      animation: scroll 30s linear infinite;
+      width: max-content;
+    }
+
+    .logo-carousel-container:hover .logos-wrapper {
+      animation-play-state: paused;
+    }
+
+    .support-logo {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      min-width: 200px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 2rem;
+      flex-shrink: 0;
+    }
+
+    .support-logo:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .support-logo img {
+      max-width: 100%;
+      max-height: 80px;
+      object-fit: contain;
+      filter: grayscale(0.3);
+      transition: filter 0.3s ease;
+    }
+
+    .support-logo:hover img {
+      filter: grayscale(0);
+    }
+
+    /* Sample logo styles for text-based logos */
+    .startup-india {
+      color: #FF8500;
+      font-size: 32px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .gradient-logo {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(45deg, #FF8500, #00AAFF);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .tech-logo {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .incubator-logo {
+      background: linear-gradient(45deg, #43e97b, #38f9d7);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .gov-logo {
+      background: linear-gradient(45deg, #fa709a, #fee140);
+      color: #333;
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .industry-logo {
+      background: linear-gradient(45deg, #4facfe, #00f2fe);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .finance-logo {
+      background: linear-gradient(45deg, #a8edea, #fed6e3);
+      color: #333;
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .startup-logo {
+      background: linear-gradient(45deg, #ffecd2, #fcb69f);
+      color: #333;
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .research-logo {
+      background: linear-gradient(45deg, #a18cd1, #fbc2eb);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .section-title {
+        font-size: 2rem;
+      }
+
+      .support-logo {
+        min-width: 150px;
+        height: 100px;
+        padding: 1.5rem;
+        margin: 0 1rem;
+      }
+
+      .startup-india {
+        font-size: 24px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .support-logo {
+        min-width: 120px;
+        height: 80px;
+        padding: 1rem;
+        margin: 0 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="support-orgs">
+    <h2 class="section-title">Supported By</h2>
+    <div class="logo-carousel-container">
+      <div class="logos-wrapper" id="logosWrapper">
+        <div class="support-logo">
+          <div class="startup-india">#startupindia</div>
+        </div>
+        <div class="support-logo">
+          <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="gradient-logo">AI</div>
+            <div style="font-weight: bold; color: #333;">Tech Incubator</div>
+          </div>
+        </div>
+        <div class="support-logo">
+          <div class="tech-logo">Innovation Hub</div>
+        </div>
+        <div class="support-logo">
+          <div class="incubator-logo">Growth Accelerator</div>
+        </div>
+        <div class="support-logo">
+          <div class="gov-logo">Government Initiative</div>
+        </div>
+        <div class="support-logo">
+          <div class="industry-logo">Industry Partner</div>
+        </div>
+        <div class="support-logo">
+          <div class="startup-india">#digitalindia</div>
+        </div>
+        <div class="support-logo">
+          <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="gradient-logo">IoT</div>
+            <div style="font-weight: bold; color: #333;">Smart Solutions</div>
+          </div>
+        </div>
+        <div class="support-logo">
+          <div class="finance-logo">Venture Capital</div>
+        </div>
+        <div class="support-logo">
+          <div class="startup-logo">Startup Ecosystem</div>
+        </div>
+        <div class="support-logo">
+          <div class="research-logo">Research Institute</div>
+        </div>
+        <div class="support-logo">
+          <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="gradient-logo">5G</div>
+            <div style="font-weight: bold; color: #333;">Future Tech</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const wrapper = document.getElementById('logosWrapper');
+      const logos = Array.from(wrapper.children);
+      logos.forEach(logo => {
+        const clone = logo.cloneNode(true);
+        wrapper.appendChild(clone);
+      });
+    });
+  </script>
+</body>
+</html>
